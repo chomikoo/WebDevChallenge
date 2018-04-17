@@ -1,0 +1,57 @@
+//========//
+// BUTTONS//
+//========//
+
+.hamburger {
+	display: block;
+	width: 25px;
+	heigth: 20px;
+	span {
+		display: block;
+		width: 25px;
+		height: 3px; 
+		
+		background-color: $black;
+		margin: 4px auto;
+		transition: all 0.3s ease-in-out;
+		cursor: pointer;
+	}
+	// active
+	&.active {
+		transition: all 0.3s ease-in-out;
+		transition-delay: 0.6s;
+		transform: rotate(45deg);
+		span {
+			&:nth-child(2){
+				width: 0;
+			}	
+			&:nth-child(1),
+			&:nth-child(3) {
+				transition-delay: 0.3s; 
+			}
+			&:nth-child(1) {
+				transform: translateY(9px);
+			}
+			&:nth-child(3) {
+				transform: translateY(-5px) rotate(90deg);
+			}
+
+		}
+	}
+}
+
+.btn {
+	display: inline-block;
+	padding: 16px 37px;
+	border: 2px solid $black;
+	font-size: 18px;
+	font-weight: $f-black;
+	color: $black;
+	text-transform: uppercase;
+	transition: all 0.5s ease-in-out;
+	cursor: pointer;
+	&:hover {
+		background-color: $black;
+		color: $white;
+	}
+}

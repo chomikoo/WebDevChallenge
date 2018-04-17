@@ -1,0 +1,63 @@
+body {
+	overflow-x: hidden;
+	font-family: $Roboto;
+	font-size: 16px;
+	background-color: $bg-section;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0; 
+	line-height: 100%;
+}
+
+ul {
+	list-style-type: none;
+
+}
+
+a {
+	text-decoration: none;
+	font-family: $Roboto;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+.noscroll {
+	overflow-y: hidden;
+	height: 100%;
+}
+
+.bold {
+	font-weight: $bold;
+}
+.d-none {
+	display: none;
+}
+
+.padd-zero {
+	padding: 0;
+}
+
+//================//
+// MD BREAKPOINT //
+//================//
+
+@include breakpoint(md) {
+	.d-md-none {
+		display:none;
+	}
+}
+
+
+//================//
+// XL BREAKPOINT //
+//================//
+
+@include breakpoint(xl) {
+	.d-xl-none {
+		display:none;
+	}
+}
