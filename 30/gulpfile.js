@@ -12,7 +12,14 @@ var reload = browserSync.reload;
 
 var useref = require('gulp-useref');
 var gulpIf = require('gulp-if');
-var cssnano = require('gulp-cssnano');
+
+// var cssnano = require('gulp-cssnano');
+
+var cleanCSS = require('gulp-clean-css')
+
+var rename = require('gulp-rename');
+
+var htmlmin = require('gulp-htmlmin');
 
 var imagemin = require('gulp-imagemin');
 var cache = require('gulp-cache');
@@ -50,7 +57,9 @@ gulp.task('sass', () => {
     'app/scss/**/*.scss'
     ])
   .pipe(wait(200))
-    .pipe(plumber(errorHandler))
+    .pipe(plumber({
+      errorHandler: handleError
+    }))
     .pipe(sourcemaps.init())
     .pipe(sass({
         errLogToConsole: true,
@@ -73,10 +82,9 @@ gulp.task('sass', () => {
 
 //ERROR 
 
-function errorHandler(error) {
-  util.beep();
-  notify.onError('Error: <%= error.message %>');
-  // console.log('');
+var handleError = function(err) {
+    console.log(err.toString());
+    this.emit('end');
 }
 
 //===========================
@@ -122,12 +130,12 @@ gulp.task('watch', ['browserSync', 'sass'], () => {
   gulp.watch('app/js/**/*.js').on('change', reload);
 });
 
-gulp.task('useref', () => {
-  return gulp.src('app/*.html')
-    .pipe(useref())
-    .pipe(gulpIf('*.css', cssnano()))
-    .pipe(gulp.dest('dist'))
-});
+// gulp.task('useref', () => {
+//   return gulp.src('app/*.html')
+//     .pipe(useref())
+//     .pipe(gulpIf('css/*.css', cssnano()))
+//     .pipe(gulp.dest('/dist'))
+// });
 
 //================
 // Minify Scripts
@@ -153,28 +161,45 @@ gulp.task('scripts', () => {
 // CHANGE FILES SRC + Min
 //=========================
 
-// gulp.task('useref', () => {
-//   return gulp.src('src/*.php')
-//     .pipe(htmlreplace({
-//       'css': 'main.min.css',
-//       'js': 'js/main.min.js'
-//     }))
-//     .pipe(useref())
-//     .pipe(gulpIf('*.css', cssnano()))
-//     .pipe(gulp.dest('dist'))
-// });
+gulp.task('html', () => {
+  return gulp.src('app/*.html')
+    .pipe(htmlreplace({
+      'css': 'css/main.min.css',
+      'js': 'js/main.min.js'
+    }))
+    .pipe(htmlmin({
+      // collapseWhitespace: true,
+       removeComments: true
+    }))
+    // .pipe(useref())
+    // .pipe(gulpIf('app/*.css', cssnano()))
+    .pipe(gulp.dest('dist'))
+});
+
+//=========================
+// Styles Minification
+//=========================
+
+gulp.task('styles', () => {
+  return gulp.src('app/css/*.css')
+      .pipe(cleanCSS())
+      .pipe(rename('main.min.css'))
+      .pipe(gulp.dest('dist/css'));
+});
+
+
 
 gulp.task('clean:dist', () => {
   return del.sync('dist');
 })
 
-gulp.task('default', function (callback) {
+gulp.task('default', (callback) => {
   runSequence(['watch', 'sass', 'browserSync'],
     callback
   )
 })
 
-gulp.task('build', function (callback) {
-  runSequence('clean:dist', ['default', 'images', 'fonts'], 'useref', 'scripts',
+gulp.task('build', (callback) => {
+  runSequence('clean:dist', ['default', 'images', 'fonts', 'styles', 'html', 'scripts'],
     callback)
 })
