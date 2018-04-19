@@ -13,9 +13,7 @@ var reload = browserSync.reload;
 var useref = require('gulp-useref');
 var gulpIf = require('gulp-if');
 
-// var cssnano = require('gulp-cssnano');
-
-var cleanCSS = require('gulp-clean-css')
+var cleanCSS = require('gulp-clean-css');
 
 var rename = require('gulp-rename');
 
@@ -56,7 +54,7 @@ gulp.task('sass', () => {
   return gulp.src([
     'app/scss/**/*.scss'
     ])
-  .pipe(wait(200))
+  // .pipe(wait(200))
     .pipe(plumber({
       errorHandler: handleError
     }))
@@ -74,7 +72,7 @@ gulp.task('sass', () => {
               }))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('app/css'))
-    // .pipe( notify( { message: 'TASK: "styles" Completed! 💯', onLast: true } ) )
+    .pipe( notify( { message: 'TASK: "styles" Completed! 💯', onLast: true } ) )
     .pipe(browserSync.reload({
       stream: true
     }))
@@ -83,6 +81,7 @@ gulp.task('sass', () => {
 //ERROR 
 
 var handleError = function(err) {
+    gutil.beep();
     console.log(err.toString());
     this.emit('end');
 }
@@ -182,7 +181,8 @@ gulp.task('html', () => {
 
 gulp.task('styles', () => {
   return gulp.src('app/css/*.css')
-      .pipe(cleanCSS())
+      .pipe(cleanCSS({rebase: false}))
+      // .pipe(cssmin())
       .pipe(rename('main.min.css'))
       .pipe(gulp.dest('dist/css'));
 });
