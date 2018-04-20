@@ -4,8 +4,22 @@ document.addEventListener('DOMContentLoaded', function() {
  	"use strict";
 
 	console.log("DOMReady");
+ 	var menu = document.getElementById('mobile_menu'),
+ 		body = document.getElementsByName('body')[0],
+		haburger = document.getElementById('hamburger'),
 
-	 var haburger = document.getElementById('hamburger');
+		mobileBreakpoint = 767;
+
+	function checkWidth() {
+		var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		return width;
+	}
+
+	window.addEventListener('resize', function () {
+		if(checkWidth() < mobileBreakpoint ) {
+			closeMenu();
+		}
+	});
 
 	 // STICKY NAV
 	 window.addEventListener('scroll', stickyNavbar);
@@ -19,25 +33,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	 	}
 	 }
 
-
-
-
 	 // MENU
 	 hamburger.addEventListener('click', function(e){
 	 	toggleMenu(e);
 	 });
 
 	 function toggleMenu(e) {
-	 	var menu = document.getElementById('mobile_menu'),
-	 		body = document.getElementsByName('body')[0];
-
-
-	 	menu.classList.toggle('show');
 	 	document.body.classList.toggle('noscroll');
-	 	// console.log(e.target.parentElement);
+	 	menu.classList.toggle('show');
 	 	hamburger.classList.toggle('active');
 	 }
 
+	 function closeMenu() {
+	 	document.body.classList.remove('noscroll');
+	 	menu.classList.remove('show');
+	 	hamburger.classList.remove('active');
+	 }
 
 	 // SMOOTH SCROLL 
 	 //BY CHRIS COYIER CSSTRICKS
@@ -51,80 +62,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	      location.hostname == this.hostname
 	    ) {
 	      var target = $(this.hash);
-	      target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-
 	      if (target.length) {
 	        event.preventDefault();
 	        $('html, body').animate({
-	          scrollTop: target.offset().top
-	        }, 1000, function() {
-	          var $target = $(target);
-	          $target.focus();
-	          if ($target.is(":focus")) {
-	            return false;
-	          } else {
-	            $target.attr('tabindex','-1');
-	            $target.focus(); 
-	          };
-	        });
+	          scrollTop: target.offset().top - 50
+	        }, 1000,);
+
+	        if(checkWidth() < mobileBreakpoint) {
+	        	toggleMenu();
+	        }
 	      }
 	    }
 	  });
-
-	  // NAVBAR 
-
-	// Cache selectors
-	// var lastId,
-	//  topMenu = $("#desktop_nav"),
-	//  topMenuHeight = topMenu.outerHeight()+1,
-	//  // All list items
-	//  menuItems = topMenu.find("a"),
-	//  // Anchors corresponding to menu items
-	//  scrollItems = menuItems.map(function(){
-	//    var item = $($(this).attr("href"));
-	//     if (item.length) { return item; }
-	//  });
-
-	// // Bind click handler to menu items
-	// // so we can get a fancy scroll animation
-	// menuItems.click(function(e){
-	//   var href = $(this).attr("href"),
-	//       offsetTop = href === "#" ? 0 : $(href).offset().top-topMenuHeight+1;
-	//   $('html, body').stop().animate({ 
-	//       scrollTop: offsetTop
-	//   }, 850);
-	//   e.preventDefault();
-	// });
-
-	// // Bind to scroll
-	// $(window).scroll(function(){
-	//    // Get container scroll position
-	//    var fromTop = $(this).scrollTop()+topMenuHeight;
-	   
-	//    // Get id of current scroll item
-	//    var cur = scrollItems.map(function(){
-	//      if ($(this).offset().top < fromTop)
-	//        return this;
-	//    });
-	//    // Get the id of the current element
-	//    cur = cur[cur.length-1];
-	//    var id = cur && cur.length ? cur[0].id : "";
-	   
-	//    if (lastId !== id) {
-	//        lastId = id;
-	//        // Set/remove active class
-	//        menuItems
-	//          .parent().removeClass("active")
-	//          .end().filter("[href='#"+id+"']").parent().addClass("active");
-	//    }                   
-	// });
 
 
 
 	// SCROLLREVEAL 
 	window.sr = ScrollReveal();
-
-
 
 	sr.reveal('section', {
 		duration: 'bottom',
@@ -133,15 +87,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		delay: 5,
 		rotate: {x: 40}
 	});
-
-
-
-
-
-
-
-
-
 
 
 
