@@ -4,7 +4,7 @@ var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 var sourcemaps = require('gulp-sourcemaps');
 var plumber     = require('gulp-plumber');
-// var wait = require('gulp-wait');
+var wait = require('gulp-wait');
 
 var browserSync = require('browser-sync').create();
 var reload = browserSync.reload;
@@ -39,7 +39,7 @@ var htmlreplace   = require('gulp-html-replace');
 gulp.task('browserSync', () => {
   browserSync.init({
     server: {
-      baseDir: 'app'
+      baseDir: 'src'
     },
   });
 });
@@ -50,7 +50,7 @@ gulp.task('browserSync', () => {
 
 gulp.task('sass', () => {
   return gulp.src([
-    'app/scss/**/*.scss'
+    'src/scss/**/*.scss'
     ])
   // .pipe(wait(200))
     .pipe(plumber({
@@ -69,7 +69,7 @@ gulp.task('sass', () => {
             browsers: ['last 4 versions']
               }))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('app/css'))
+    .pipe(gulp.dest('src/css'))
     .pipe( notify( { message: 'TASK: "styles" Completed! 💯', onLast: true } ) )
     .pipe(browserSync.reload({
       stream: true
@@ -79,7 +79,7 @@ gulp.task('sass', () => {
 //ERROR 
 
 var handleError = function(err) {
-    gutil.beep();
+    // gutil.beep();
     console.log(err.toString());
     this.emit('end');
 }
@@ -89,7 +89,7 @@ var handleError = function(err) {
 //===========================
 
 gulp.task('images', () => {
-  return gulp.src('app/images/**/*.+(png|jpg|jpeg|gif|svg)')
+  return gulp.src('src/images/**/*.+(png|jpg|jpeg|gif|svg)')
     .pipe(cache(imagemin({
       interlaced: true
     })))
@@ -117,18 +117,18 @@ gulp.task('images', () => {
 //================
 
 gulp.task('fonts', () => {
-  return gulp.src('app/fonts/**/*')
+  return gulp.src('src/fonts/**/*')
     .pipe(gulp.dest('dist/fonts'))
 })
 
 gulp.task('watch', ['browserSync', 'sass'], () => {
-  gulp.watch('app/scss/**/*.scss', ['sass']);
-  gulp.watch('app/*.html').on('change', reload);
-  gulp.watch('app/js/**/*.js').on('change', reload);
+  gulp.watch('src/scss/**/*.scss', ['sass']);
+  gulp.watch('src/*.html').on('change', reload);
+  gulp.watch('src/js/**/*.js').on('change', reload);
 });
 
 // gulp.task('useref', () => {
-//   return gulp.src('app/*.html')
+//   return gulp.src('src/*.html')
 //     .pipe(useref())
 //     .pipe(gulpIf('css/*.css', cssnano()))
 //     .pipe(gulp.dest('/dist'))
@@ -140,7 +140,9 @@ gulp.task('watch', ['browserSync', 'sass'], () => {
 
 gulp.task('scripts', () => {
   return gulp.src([
-    'app/js/*.js'
+    'src/js/owl.carousel.js',
+    'src/js/smooth-scroll.js',
+    'src/js/script.js',
     ])
     .pipe(concat('main.min.js'))
     .pipe(babili({
@@ -159,7 +161,7 @@ gulp.task('scripts', () => {
 //=========================
 
 gulp.task('html', () => {
-  return gulp.src('app/*.html')
+  return gulp.src('src/*.html')
     .pipe(htmlreplace({
       'css': 'css/main.min.css',
       'js': 'js/main.min.js'
@@ -169,7 +171,7 @@ gulp.task('html', () => {
        removeComments: true
     }))
     // .pipe(useref())
-    // .pipe(gulpIf('app/*.css', cssnano()))
+    // .pipe(gulpIf('src/*.css', cssnano()))
     .pipe(gulp.dest('dist'))
 });
 
@@ -178,7 +180,7 @@ gulp.task('html', () => {
 //=========================
 
 gulp.task('styles', () => {
-  return gulp.src('app/css/*.css')
+  return gulp.src('src/css/*.css')
       .pipe(cleanCSS({rebase: false}))
       // .pipe(cssmin())
       .pipe(rename('main.min.css'))

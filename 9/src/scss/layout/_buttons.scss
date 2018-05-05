@@ -1,0 +1,75 @@
+// butttons 
+
+button:focus {
+	outline:0;
+}
+
+.hamburger {
+	display: block;
+	width: 25px;
+	heigth: 20px;
+	z-index: 99;
+
+	border: none;
+	background-color: transparent;
+	@include breakpoint(md) {
+		display: none;
+	}
+	span {
+		display: block;
+		width: 25px;
+		height: 3px; 
+		
+		background-color: $text-grey;
+		margin: 4px auto;
+		transition: all 0.3s ease-in-out;
+		cursor: pointer;
+	}
+	// active
+	&.active {
+		transition: all 0.3s ease-in-out;
+		transition-delay: 0.6s;
+		transform: rotate(45deg);
+		span {
+			&:nth-child(2){
+				width: 0;
+			}	
+			&:nth-child(1),
+			&:nth-child(3) {
+				transition-delay: 0.3s; 
+			}
+			&:nth-child(1) {
+				transform: translateY(9px);
+			}
+			&:nth-child(3) {
+				transform: translateY(-5px) rotate(90deg);
+			}
+
+		}
+	}
+}
+
+.btn {
+	display: flex;
+	justify-content: center;
+	// align-items: center;
+	// margin: auto;
+	border: 2px solid $red;
+	background-color: $red;
+	font-family: $Raleway;
+	color: $white;
+	width: 200px;
+	height: 55px;
+	text-transform: uppercase;
+	transition: all 0.5s ease-in-out;
+	&--center {
+		margin: 0 auto;
+	}
+	&:hover {
+		// border: 2px solid $red;
+		background-color: transparent;
+		color: $red;
+	}
+
+}
+
